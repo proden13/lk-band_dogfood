@@ -6,7 +6,7 @@ const Loader = () => {
         <span className="loader-img">
             <ArrowClockwise />
         </span>
-        <h6> Данные загружаются</h6>
+        <h6>Загруз Очка</h6>
 
     </div>
 
