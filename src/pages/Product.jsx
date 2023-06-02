@@ -8,7 +8,7 @@ const Product = ({ token }) => {
     const { id } = useParams()
 
     useEffect(() => {
-        fetch(`https://api.react-learning.ru/product/${id}`, {
+        fetch(`https://api.react-learning.ru/products/${id}`, {
             headers: {
                 "Authorization": `Bearer ${token}`
             }

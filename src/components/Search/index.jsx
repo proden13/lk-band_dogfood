@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import "./style.css";
 
 // arr - список товаров из json-файла
-const Search = ({arr, upd}) => {
+const Search = ({ arr, upd }) => {
 	// let text = "Corn";
 	const [text, setText] = useState("");
 	const [quantity, setQuantity] = useState(arr.length);
@@ -13,6 +13,16 @@ const Search = ({arr, upd}) => {
 		Единственный аргумент useState - значение по умолчанию
 	*/
 	const [count, updateCount] = useState(0);
+	useEffect(() => {
+		if (text) {
+			let result = arr.filter(el => new RegExp(text, "i").test(el.name))
+			upd(result);
+			setQuantity(result.length);
+		} else {
+			upd(arr);
+			setQuantity(arr.length);
+		}
+	}, [arr]);
 	let n = 1;
 	const click = () => {
 		// console.log(n++);
@@ -35,13 +45,13 @@ const Search = ({arr, upd}) => {
 
 	return (
 		<div className="search-block">
-			<input type="search" value={text} onChange={searchByText}/>
+			<input type="search" value={text} onChange={searchByText} />
 			{/*<input 
 				type="search" 
 				value={text} 
 				onChange={(e) => setText(e.target.value)}/>*/}
 			<button onClick={click}>Кнопочка</button>
-			<hr/>
+			<hr />
 			{/*<div>{text}, {n}, {count}</div>*/}
 			<div>По вашему запросу « {text} » найдено {quantity} подходящих товаров</div>
 		</div>
@@ -51,7 +61,7 @@ const Search = ({arr, upd}) => {
 export default Search;
 
 
-// Search => 
+// Search =>
 // 	document.createElement("div")
 // 	...
 // 	document.createElement("input")
