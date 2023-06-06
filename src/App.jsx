@@ -28,21 +28,10 @@ import React, { useState, useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
 
 // компоненты (кусочки кода, которые используются многократно)
-import { Header, Footer } from "./components/General";
+import { Header, Footer, MobileMenu } from "./components/General";
 import Modal from "./components/Modal";
 import Search from "./components/Search";
-
-
-import Promo from "./components/Promo/Promo";
-import PromoLukovnikov from "./components/PromoLukovnikov/PromoLukovnikov";
-import PromoFlex from "./components/PromoFlex/PromoFlex";
-import banner_pic_1 from "./assets/images/banner_pic_1.png";
-import banner_pic_2 from "./assets/images/banner_pic_2.png";
-import banner_pic_3 from "./assets/images/banner_pic_3.png";
-import banner_pic_4 from "./assets/images/banner_pic_4.png";
-import banner_pic_5 from "./assets/images/banner_pic_5.png";
-import banner_pic_6 from "./assets/images/banner_pic_6.png";
-import cardsData from "./assets/data"; //data.json//
+import Ctx from "./context";
 
 
 // страницы - отдельный компонент со своим набором компонентов
@@ -65,12 +54,18 @@ const App = () => {
     const [user, setUser] = useState(localStorage.getItem("rockUser"));
     const [token, setToken] = useState(localStorage.getItem("rockToken"));
     const [userId, setUserId] = useState(localStorage.getItem("rockId"));
+    const [product, setProduct] = useState({});
     // Товары из БД
     const [serverGoods, setServerGoods] = useState([]);
     // Товары для поиска и филтрации
     const [goods, setGoods] = useState(serverGoods);
 
     const [modalActive, setModalActive] = useState(false);
+    const [modalReviewActive, setModalReviewActive] = useState(false);
+    const [addProductFormActive, setAddProductFormActive] = useState(false);
+    const [editProductFormActive, setEditProductFormActive] = useState(false);
+
+
 
     // useEffect срабатывает каждый раз, когда компонент создался или перерисовался
     useEffect(() => {
@@ -115,71 +110,56 @@ const App = () => {
     }, [user]);
 
     return (
+         <Ctx.Provider value={{
+            goods,
+            setGoods,
+            serverGoods,
+            setServerGoods,
+            // news,
+            // setServerNews,
+            token,
+            modalActive,
+            setModalActive,
+            user,
+            setUser,
+            userId,
+            // newsBlock,
+            // text,
+            // setText,
+            modalReviewActive,
+            setModalReviewActive,
+            product,
+            setProduct,
+            addProductFormActive,
+            setAddProductFormActive,
+            editProductFormActive,
+            setEditProductFormActive
+           }}>
         <React.Fragment>
-
-            <Header
-                user={user}
-                setModalActive={setModalActive}
-                setGoods={setGoods}
-                serverGoods={serverGoods} />
-            {/* <MobileMenu user={user} setModalActive={setModalActive} /> */}
+            <Header />
+           
             <main>
-
-                <Search arr={serverGoods} upd={setGoods} />
-                {/*SPA - Single Page Application */}
-                {/*
-            <nav>
-                <Link to="/"> Главная</Link>
-                <Link to="/catalog"> Каталог</Link>
-                <Link to="/draft"> Старый код</Link>
-            </nav>*/}
-
                 <Routes>
-                    <Route path="/" element={<Main />} />
+                    {!user && <>
+                        <Route path="/*" element={<Main />} />
+                    </>}
 
-                    <Route path="/catalog" element={<Catalog goods={goods} setServerGoods={setServerGoods} serverGoods={serverGoods} />} />
+                    {user && <>
+                        <Route path="/" element={<Main />} />
+                        {/*<Route path="/add" element={<Add />}/>*/}
 
-                    <Route path="/draft" element={<Draft />} />
+                        <Route path="/catalog" element={<Catalog />} />
 
-                    <Route path="/profile" element={<Profile user={user} setUser={setUser} color="yellow" />} />
-
-                    <Route path="/product/:id" element={<Product token={token} />} />
-
-                    <Route path="/favorites" element={<Favorites goods={goods} userId={userId} setServerGoods={setServerGoods} />} />
+                        <Route path="/draft" element={<Draft />} />
+                        <Route path="/profile" element={<Profile />} />
+                        <Route path="/product/:id" element={<Product />} />
+                        <Route path="/favorites" element={<Favorites />} />
+                    </>}
                 </Routes>
-
-                <PromoFlex type="lg" header="Подарок за первый заказ!" text="Лёгкое говяжье — пластины" pic={banner_pic_1} />
-                <Card img={goods[0]?.pictures} name={goods[0]?.name} price={goods[0]?.price} _id={goods[0]?._id} discount={goods[0]?.discount} likes={goods[0]?.likes} />
-                <Card img={goods[1]?.pictures} name={goods[1]?.name} price={goods[1]?.price} _id={goods[1]?._id} discount={goods[1]?.discount} likes={goods[1]?.likes} />
-                <Card img={goods[2]?.pictures} name={goods[2]?.name} price={goods[2]?.price} _id={goods[2]?._id} discount={goods[2]?.discount} likes={goods[2]?.likes} />
-                <Card img={goods[3]?.pictures} name={goods[3]?.name} price={goods[3]?.price} _id={goods[3]?._id} discount={goods[3]?.discount} likes={goods[3]?.likes} />
-
-
-                <PromoFlex header="Наборы для дрессировки" text="от 840 ₽" pic={banner_pic_6} />
-                <PromoFlex header="Микс масел" text="пищевая здоровая натуральная добавка" pic={banner_pic_3} />
-
-                <Card img={goods[4]?.pictures} name={goods[4]?.name} price={goods[4]?.price} _id={goods[4]?._id} discount={goods[4]?.discount} />
-                <Card img={goods[5]?.pictures} name={goods[5]?.name} price={goods[5]?.price} _id={goods[5]?._id} discount={goods[5]?.discount} />
-                <Card img={goods[6]?.pictures} name={goods[6]?.name} price={goods[6]?.price} _id={goods[6]?._id} discount={goods[6]?.discount} />
-                <Card img={goods[7]?.pictures} name={goods[7]?.name} price={goods[7]?.price} _id={goods[7]?._id} discount={goods[7]?.discount} />
-
-                <PromoFlex header="Рога северного оленя" text="от 10 до 30 кг" pic={banner_pic_2} />
-                <PromoFlex header="Слипы из шеи индейки" text="100 % натуральное" pic={banner_pic_4} />
-
-                <Card img={goods[8]?.pictures} name={goods[8]?.name} price={goods[8]?.price} _id={goods[8]?._id} discount={goods[8]?.discount} />
-                <Card img={goods[9]?.pictures} name={goods[9]?.name} price={goods[9]?.price} _id={goods[9]?._id} discount={goods[9]?.discount} />
-                <Card img={goods[10]?.pictures} name={goods[10]?.name} price={goods[10]?.price} _id={goods[10]?._id} discount={goods[10]?.discount} />
-                <Card img={goods[11]?.pictures} name={goods[11]?.name} price={goods[11]?.price} _id={goods[11]?._id} discount={goods[11]?.discount} />
-
-
-                <PromoFlex type="lg" header="Подарок за десятый заказ!" text="Лёгкое говяжье — кубики" pic={banner_pic_5} />
-
             </main>
-
             <Footer />
-            <Modal active={modalActive} setActive={setModalActive} setUser={setUser} />
+            <Modal />
         </React.Fragment>
-    )
+        </Ctx.Provider>)
 }
-
 export default App;

@@ -1,62 +1,59 @@
 import Logo from "./Logo";
 import SearchHeader from "../SearchHeader";
 import login_ico from "../../assets/icons/login_ico.svg";
+import { CardList, Heart, Bag, PersonCircle } from "react-bootstrap-icons";
+// иконки можно найти тут https://icons.getbootstrap.com/ //
 import { Link } from "react-router-dom";
-import { 
-    Folder2, 
-    Star, 
-    Cart4, 
-    PersonSquare, 
-    BoxArrowInRight
-} from "react-bootstrap-icons";
 import { useNavigate } from "react-router";
 import { useState, useEffect } from "react";
+import { useContext } from "react";
+import Ctx from "../../context"
 
-import Search from "../Search";
 
-const Header = ({user, setModalActive, setGoods, serverGoods}) => {
+
+
+
+
+
+const Header = () => {
+    const {user} = useContext(Ctx); 
+    const {setModalActive} = useContext(Ctx);
+    const {serverGoods} = useContext(Ctx);
     
     const navigate = useNavigate();
     const [likeCnt, setLikeCnt] = useState(0);
     const [cartCnt, setCartCnt] = useState(0);
     useEffect(() => {setLikeCnt(serverGoods.filter(el => el.likes.includes(localStorage.getItem("rockId"))).length)}, [serverGoods]);
-
+    
     const logIn = (e) => {
         e.preventDefault();
-        //setUser("lk-band")
-        //localStorage.setItem("rockUser", "lk-band");
+        
+      
         setModalActive(true);
         navigate("/profile")
     }
 
+
     return <header>
-        <Logo/>
-    
-        <div className="search">
-            <SearchHeader arr={serverGoods} upd={setGoods} />
-        </div>
+        <Logo />
+        <div className="search"><SearchHeader /></div>
+
         <nav className="header__menu">
-            {/* Если пользователь === true */}
             {user && <>
-                <Link to="/catalog" title="Каталог" className="badge-el">
-                    <Folder2/>
-                    {/* <span className="badge-item">{serverGoods.length}</span> */}
-                </Link>
-                <Link to="/favorites" title="Избранное" className="badge-el">
-                    <Star/>
-                    <span className="badge-item">{likeCnt}</span>
-                </Link>
-                <Link to="/" title="Корзина" className="badge-el">
-                    <Cart4/>
-                    <span className="badge-item">{cartCnt}</span>
-                </Link>
-                <Link to="/profile" title="Профиль">
-                    <PersonSquare/>
-                </Link>
+                <Link to="/catalog" title="Каталог" className="badge__el"><CardList />
+                <span className="badge__item">{serverGoods.length}</span></Link>
+
+                <Link to="/favorites" title="Избранное" className="badge__el"><Heart />
+                <span className="badge__item">{likeCnt}</span></Link>
+
+                <Link to="/cart" title="Корзина" className="badge__el"><Bag />
+                <span className="badge__item">{cartCnt}</span></Link>
+                <Link to="/profile" title="Профиль"><PersonCircle /></Link>
+
+
+
             </>}
-            {!user && <a href="" onClick={logIn} title="Войти">
-                <BoxArrowInRight/>
-            </a>}
+            {!user && <Link to="" title="Войти" className="header__ico" onClick={logIn}><img src={login_ico} className="header__ico" alt="Войти" />Войти</Link>}
         </nav>
     </header>
 }

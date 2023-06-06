@@ -7,14 +7,14 @@ import vk from "../../assets/icons/vk.png";
 import { Link } from "react-router-dom";
 
 const Footer = () => {
-    return <footer className="footer">
+    return <footer>
         <div className="footer__cell">
         <div className="footer__logo"><Logo /></div>
             <div className="footer__logo">©️{new Date().getFullYear()}</div>
         </div>
         <div className="footer__cell footer__menu">
             <Link to="/catalog">Каталог</Link>
-            <Link to="/draft">Акции</Link>
+            <Link to="/draft">Акции (Черновик)</Link>
             <Link to="/">Новости</Link>
             <Link to="/">Отзывы</Link>
         </div>

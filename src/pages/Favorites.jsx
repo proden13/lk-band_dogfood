@@ -1,6 +1,12 @@
 import Card from "../components/Card";
+import Ctx from "../context"
+import { useContext } from "react";
 
-const Favorites = ({ goods, userId, setServerGoods }) => {
+const Favorites = () => {
+    const { setServerGoods } = useContext(Ctx); 
+    const { goods } = useContext(Ctx);
+    const { userId } = useContext(Ctx);
+    
     return <div className="container">
         {goods.filter(el => el.likes.includes(userId)).map(g => <Card
             {...g}

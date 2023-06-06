@@ -1,10 +1,12 @@
 import image from "../../assets/images/logo.png";
+import { Link } from "react-router-dom";
+
 
 const Logo = () => {
-    return <a href="/" className="logo">
-        <img src={image} alt="DogFood"/>
-        <span></span>
-    </a>
-}
+    return <Link to="/" className="logo">
+        <img src={image} alt="DogFood logo" />
+        <span>RockDog</span>
+    </Link>
+} 
 
 export default Logo;
